@@ -1,18 +1,19 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
 void main() {
-  final myApp = MyApp();
+  var myApp = MyApp();
   myApp._myHomePage._myHomePageState._serverStuff();
   runApp(myApp);
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  final _myHomePage = MyHomePage(
+  var _myHomePage = MyHomePage(
     title: 'a',
   );
   MyHomePage get() => _myHomePage;
@@ -50,7 +51,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  final _myHomePageState = _MyHomePageState();
+  var _myHomePageState = _MyHomePageState();
   _MyHomePageState get() => _myHomePageState;
 
   @override
@@ -147,7 +148,6 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('$_players_names'),
             Text(
               '$_string',
               textScaleFactor: 2,
