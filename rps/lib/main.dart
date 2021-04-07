@@ -1,11 +1,21 @@
+import 'dart:io';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:english_words/english_words.dart';
 
 void main() {
-  runApp(MyApp());
+  final myApp = MyApp();
+  myApp._myHomePage._myHomePageState._serverStuff();
+  runApp(myApp);
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  final _myHomePage = MyHomePage(
+    title: 'a',
+  );
+  MyHomePage get() => _myHomePage;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,9 +30,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
-      home: MyHomePage(title: '♥'),
+      home: _myHomePage,
     );
   }
 }
@@ -40,13 +50,31 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final _myHomePageState = _MyHomePageState();
+  _MyHomePageState get() => _myHomePageState;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _myHomePageState;
+}
+
+class Player {
+  final String name;
+  final String ip;
+  Player(this.name, this.ip);
+  Player.fromJson(Map<String, dynamic> json) : this(json['name'], json['ip']);
+  Map<String, dynamic> toJson(Player player) => {'name': name, 'ip': ip};
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var _string = "Rock";
   double _counter = 0.5;
+  var obj = {"name": "hi", "ip": "10.0.0.1"};
+  Set<Player> _players = {
+    Player.fromJson({"name": "hey", "ip": "192.168.0.101"}),
+    Player.fromJson({"name": "heya", "ip": "192.168.0.102"})
+  };
+  Set<String> _player_names = {};
+  bool _stop = false;
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -55,7 +83,33 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter += 15.5;
+      _string = WordPair.random().first;
     });
+  }
+
+  void _doStuff(int hey) {
+    if (hey == 0) {
+      _incrementCounter();
+    } else {
+      setState(() {
+        _counter = 0;
+      });
+    }
+  }
+
+  void handleRequest(dynamic request) {}
+
+  void getConnectedPlayers() async {}
+
+  void _serverStuff() async {
+    while (!_stop) {
+      getConnectedPlayers();
+      sleep(Duration(seconds: 5));
+    }
+  }
+
+  void stop() {
+    _stop = true;
   }
 
   @override
@@ -66,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -92,12 +147,15 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text('$_players_names'),
             Text(
-              'Dont Touch:',
+              '$_string',
+              textScaleFactor: 2,
             ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
+              textScaleFactor: 3,
             ),
           ],
         ),
@@ -105,16 +163,22 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.beach_access,
+          color: Colors.blueGrey.shade700,
+        ),
         hoverColor: Color(Colors.red.value),
         splashColor: Color(Colors.white.value),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-      floatingActionButtonz: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-        hoverColor: Color(Colors.red.value),
-        splashColor: Color(Colors.white.value),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      backgroundColor: Colors.amber.shade50,
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(label: 'zeus', icon: Icon(Icons.gamepad)),
+          BottomNavigationBarItem(label: 'hey', icon: Icon(Icons.ac_unit))
+        ],
+        onTap: _doStuff,
+        selectedFontSize: 30,
       ),
     );
   }
